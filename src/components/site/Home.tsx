@@ -3,7 +3,7 @@ import { Header } from "@/components/site/Header";
 import { CalorieChart } from "@/components/site/CalorieChart";
 import heroImg from "@/assets/hero.jpg";
 import suitImg from "@/assets/suit.jpg";
-import workplaceImg from "@/assets/workplace.jpg";
+import aboutStudioImg from "@/assets/about-studio.jpg";
 import coachingImg from "@/assets/coaching.jpg";
 
 export function Home() {
