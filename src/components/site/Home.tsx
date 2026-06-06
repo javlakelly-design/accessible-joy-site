@@ -3,7 +3,7 @@ import { Header } from "@/components/site/Header";
 import { CalorieChart } from "@/components/site/CalorieChart";
 import heroImg from "@/assets/hero.jpg";
 import suitImg from "@/assets/suit.jpg";
-import workplaceImg from "@/assets/workplace.jpg";
+import aboutStudioImg from "@/assets/about-studio.jpg";
 import coachingImg from "@/assets/coaching.jpg";
 
 export function Home() {
@@ -18,7 +18,7 @@ export function Home() {
 
   const services = [
     { title: t("services.coach.title"), body: t("services.coach.body"), img: coachingImg },
-    { title: t("services.culture.title"), body: t("services.culture.body"), img: workplaceImg },
+    { title: t("services.culture.title"), body: t("services.culture.body"), img: aboutStudioImg },
     { title: t("services.tech.title"), body: t("services.tech.body"), img: suitImg },
   ];
 
@@ -100,11 +100,11 @@ export function Home() {
             </div>
             <div className="relative aspect-[16/11] overflow-hidden rounded-3xl border border-border">
               <img
-                src={workplaceImg}
-                alt={lang === "de" ? "Team trainiert gemeinsam im Büro" : "Team training together in the office"}
+                src={aboutStudioImg}
+                alt={lang === "de" ? "Frau trainiert im EMS-Anzug im Studio" : "Woman training in EMS suit at the studio"}
                 loading="lazy"
-                width={1600}
-                height={1100}
+                width={1280}
+                height={880}
                 className="h-full w-full object-cover"
               />
             </div>
