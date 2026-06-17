@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useI18n } from "@/lib/i18n";
+import { useEffect, useRef, useState } from "react";
+import { useI18n, type Lang } from "@/lib/i18n";
 
 const navItems = [
   { id: "about", key: "nav.about" as const },
@@ -8,8 +8,99 @@ const navItems = [
   { id: "team", key: "nav.team" as const },
 ];
 
+const languages: { code: Lang; label: string; native: string }[] = [
+  { code: "en", label: "English", native: "English" },
+  { code: "de", label: "German", native: "Deutsch" },
+  { code: "uk", label: "Ukrainian", native: "Українська" },
+];
+
+function LanguagePicker({ variant = "header" }: { variant?: "header" | "mobile" }) {
+  const { lang, setLang } = useI18n();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  const triggerLabel = variant === "mobile" ? "Change language" : "Change language";
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`${triggerLabel} (current: ${languages.find((l) => l.code === lang)?.native})`}
+        className="inline-flex items-center gap-2 min-h-11 rounded-full border border-border bg-surface/70 px-4 text-sm font-medium text-foreground hover:bg-surface transition-colors"
+      >
+        <svg aria-hidden viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" />
+        </svg>
+        <span>{triggerLabel}</span>
+        <span className="uppercase tracking-wider text-muted-foreground">{lang}</span>
+        <svg aria-hidden viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </button>
+
+      {open && (
+        <ul
+          role="listbox"
+          aria-label="Languages"
+          className={`absolute z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-border bg-background shadow-xl ${
+            variant === "mobile" ? "left-0" : "right-0"
+          }`}
+        >
+          {languages.map((l) => {
+            const selected = l.code === lang;
+            return (
+              <li key={l.code} role="option" aria-selected={selected}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLang(l.code);
+                    setOpen(false);
+                  }}
+                  className={`flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm transition-colors ${
+                    selected
+                      ? "bg-surface text-foreground"
+                      : "text-muted-foreground hover:bg-surface hover:text-foreground"
+                  }`}
+                >
+                  <span className="flex flex-col">
+                    <span className="font-medium text-foreground">{l.native}</span>
+                    <span className="text-xs text-muted-foreground">{l.label}</span>
+                  </span>
+                  <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                    {l.code}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export function Header() {
-  const { t, lang, setLang } = useI18n();
+  const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -50,24 +141,8 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div
-            role="group"
-            aria-label="Language"
-            className="hidden sm:flex items-center rounded-full border border-border bg-surface/70 p-0.5 text-xs"
-          >
-            {(["en", "de"] as const).map((l) => (
-              <button
-                key={l}
-                type="button"
-                onClick={() => setLang(l)}
-                aria-pressed={lang === l}
-                className={`min-h-9 min-w-9 rounded-full px-2.5 font-medium uppercase tracking-wider transition-colors ${
-                  lang === l ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {l}
-              </button>
-            ))}
+          <div className="hidden sm:block">
+            <LanguagePicker />
           </div>
 
           <a
@@ -102,20 +177,8 @@ export function Header() {
                 {t(i.key)}
               </a>
             ))}
-            <div className="mt-3 flex items-center gap-2">
-              {(["en", "de"] as const).map((l) => (
-                <button
-                  key={l}
-                  type="button"
-                  onClick={() => setLang(l)}
-                  aria-pressed={lang === l}
-                  className={`min-h-11 px-4 rounded-full border border-border text-sm uppercase tracking-wider ${
-                    lang === l ? "bg-foreground text-background" : "text-muted-foreground"
-                  }`}
-                >
-                  {l}
-                </button>
-              ))}
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <LanguagePicker variant="mobile" />
               <a
                 href="#appointment"
                 onClick={() => setOpen(false)}
