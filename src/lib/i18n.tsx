@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-export type Lang = "en" | "de";
+export type Lang = "en" | "de" | "uk";
 
 type Dict = Record<string, string>;
 
@@ -150,7 +150,80 @@ const de: Dict = {
   "footer.rights": "Alle Rechte vorbehalten.",
 };
 
-const dicts = { en, de };
+const uk: Dict = {
+  "nav.about": "Про нас",
+  "nav.services": "Послуги",
+  "nav.tech": "Технологія",
+  "nav.team": "Команда",
+  "nav.book": "Забронювати",
+
+  "hero.eyebrow": "Фітнес майбутнього на роботі",
+  "hero.title": "Сила, вбудована в\nробочий день.",
+  "hero.sub": "Корпоративний EMS-фітнес прямо у вашому офісі. Повноцінне тренування за 20 хвилин, яке вписується у зміни, зустрічі та культуру команди.",
+  "hero.cta": "Забронювати",
+  "hero.cta2": "Як це працює",
+
+  "stats.time": "хвилин за тренування",
+  "stats.muscles": "м'язових груп задіяно",
+  "stats.calories": "× спалювання калорій vs. звичайне",
+  "stats.results": "тижнів до видимих результатів",
+
+  "about.eyebrow": "Більше, ніж тренування",
+  "about.title": "Фітнес, що поважає ваш графік.",
+  "about.body": "Ми приносимо EMS-тренування прямо до вас. Без дороги, без роздягалень, без виправдань — лише сфокусоване заняття, що покращує здоров'я, поставу й продуктивність протягом робочого дня.",
+
+  "services.eyebrow": "Послуги",
+  "services.title": "Три способи співпраці.",
+  "services.coach.title": "Персональний коучинг",
+  "services.coach.body": "Індивідуальні програми під ваші цілі, графік і рівень підготовки — від сертифікованих EMS-тренерів.",
+  "services.culture.title": "Корпоративна культура",
+  "services.culture.body": "Спільний фітнес-ритуал, який об'єднує команди, підтримує добробут і показує справжню турботу про людей.",
+  "services.tech.title": "Технології та налаштування",
+  "services.tech.body": "Ми встановлюємо, навчаємо та підтримуємо — перетворюємо куток офісу на повноцінну EMS-студію за лічені дні.",
+
+  "ems.eyebrow": "EMS пояснення",
+  "ems.title": "20 хвилин, що тренують усе тіло.",
+  "ems.body": "Електростимуляція м'язів (EMS) надсилає м'які імпульси через костюм X1200, активуючи до 100 % м'язових груп одночасно — до 85 разів на секунду. Спочатку розроблено для реабілітації, тепер удосконалено для тренувань.",
+  "ems.bullet1": "Активація всього тіла за одне тренування",
+  "ems.bullet2": "До 3× більше спалених калорій порівняно зі звичайним тренуванням",
+  "ems.bullet3": "Видимі результати за 7 тижнів при 2 заняттях на тиждень",
+  "ems.cta": "Дізнатися більше",
+
+  "chart.title": "Спалені калорії за 20-хвилинне заняття",
+  "chart.sub": "Порівняння з популярними видами спорту, орієнтовно.",
+  "chart.unit": "ккал",
+
+  "suit.eyebrow": "Костюм X1200",
+  "suit.title": "Високі технології з голови до ніг.",
+  "suit.body": "Модульні електроди адаптуються до вашого тіла й охоплюють кожну велику м'язову групу. Легкий, дихаючий і створений для щоденного використання.",
+
+  "team.eyebrow": "Наші тренери",
+  "team.title": "Натхненні мотивувати — з турботою.",
+  "team1.name": "Денніс",
+  "team1.role": "Персональний коуч · EMS",
+  "team2.name": "Лілі",
+  "team2.role": "Персональний коуч · Фізіо",
+  "team3.name": "Вінсент",
+  "team3.role": "Персональний коуч · CEO",
+
+  "inclusive.eyebrow": "Для кожного",
+  "inclusive.title": "Фітнес-концепція, що включає всіх.",
+  "inclusive.body": "EMS підтримує людей із фізичними обмеженнями, зміцнює сенсомоторні та когнітивні навички, і відкриває шлях кожному тілу — на будь-якому рівні.",
+
+  "appt.eyebrow": "Запис",
+  "appt.title": "Розпочнімо разом.",
+  "appt.body": "Оберіть час, зручний для вашої команди. Ми підтвердимо протягом одного робочого дня.",
+  "appt.cta": "Відкрити календар",
+  "appt.or": "Або зв'яжіться напряму",
+
+  "footer.location": "Наша адреса",
+  "footer.maps": "Показати на Google Maps",
+  "footer.imprint": "Вихідні дані",
+  "footer.privacy": "Політика конфіденційності",
+  "footer.rights": "Усі права захищені.",
+};
+
+const dicts = { en, de, uk };
 
 type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (k: keyof typeof en) => string };
 const I18nContext = createContext<Ctx | null>(null);
@@ -160,9 +233,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = (typeof window !== "undefined" && localStorage.getItem("lang")) as Lang | null;
-    if (stored === "en" || stored === "de") setLangState(stored);
-    else if (typeof navigator !== "undefined" && navigator.language?.toLowerCase().startsWith("de")) {
-      setLangState("de");
+    if (stored === "en" || stored === "de" || stored === "uk") setLangState(stored);
+    else if (typeof navigator !== "undefined") {
+      const nav = navigator.language?.toLowerCase() ?? "";
+      if (nav.startsWith("de")) setLangState("de");
+      else if (nav.startsWith("uk")) setLangState("uk");
     }
   }, []);
 
