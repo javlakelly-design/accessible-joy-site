@@ -8,7 +8,7 @@ import studioWeights from "@/assets/studio-weights.png.asset.json";
 import vincentImg from "@/assets/vincent.png.asset.json";
 import michelleImg from "@/assets/michelle.png.asset.json";
 import suitImg from "@/assets/suit.jpg";
-import coachingImg from "@/assets/coaching.jpg";
+import coachingImg from "@/assets/coaching-illustration.jpg";
 
 export function Home() {
   const { t, lang } = useI18n();
