@@ -1,9 +1,13 @@
 import { useI18n } from "@/lib/i18n";
 import { Header } from "@/components/site/Header";
 import { CalorieChart } from "@/components/site/CalorieChart";
-import heroImg from "@/assets/hero.jpg";
+import studioMain from "@/assets/studio-main.png.asset.json";
+import studioMirror from "@/assets/studio-mirror.png.asset.json";
+import studioLounge from "@/assets/studio-lounge.png.asset.json";
+import studioWeights from "@/assets/studio-weights.png.asset.json";
+import vincentImg from "@/assets/vincent.png.asset.json";
+import michelleImg from "@/assets/michelle.png.asset.json";
 import suitImg from "@/assets/suit.jpg";
-import aboutStudioImg from "@/assets/about-studio.jpg";
 import coachingImg from "@/assets/coaching.jpg";
 
 export function Home() {
@@ -18,8 +22,8 @@ export function Home() {
 
   const services = [
     { title: t("services.coach.title"), body: t("services.coach.body"), img: coachingImg },
-    { title: t("services.culture.title"), body: t("services.culture.body"), img: aboutStudioImg },
-    { title: t("services.tech.title"), body: t("services.tech.body"), img: suitImg },
+    { title: t("services.culture.title"), body: t("services.culture.body"), img: studioLounge.url },
+    { title: t("services.tech.title"), body: t("services.tech.body"), img: studioWeights.url },
   ];
 
   return (
@@ -34,7 +38,7 @@ export function Home() {
         >
           <div className="absolute inset-0 -z-10">
             <img
-              src={heroImg}
+              src={studioMain.url}
               alt=""
               aria-hidden
               width={1920}
@@ -101,8 +105,8 @@ export function Home() {
             </div>
             <div className="relative aspect-[16/11] overflow-hidden rounded-3xl border border-border">
               <img
-                src={aboutStudioImg}
-                alt={lang === "de" ? "Frau trainiert im EMS-Anzug im Studio" : "Woman training in EMS suit at the studio"}
+                src={studioMirror.url}
+                alt={lang === "de" ? "Unser Studio mit beleuchteten Spiegeln" : "Our studio with illuminated mirrors"}
                 loading="lazy"
                 width={1280}
                 height={880}
@@ -228,22 +232,21 @@ export function Home() {
               {t("team.title")}
             </h2>
 
-            <ul className="mt-12 grid gap-6 sm:grid-cols-3" role="list">
+            <ul className="mt-12 grid gap-6 sm:grid-cols-2 max-w-3xl" role="list">
               {[
-                { name: t("team1.name"), role: t("team1.role"), initial: "D" },
-                { name: t("team2.name"), role: t("team2.role"), initial: "L" },
-                { name: t("team3.name"), role: t("team3.role"), initial: "V" },
+                { name: t("team1.name"), role: t("team1.role"), img: vincentImg.url },
+                { name: t("team2.name"), role: t("team2.role"), img: michelleImg.url },
               ].map((m) => (
                 <li
                   key={m.name}
                   className="rounded-3xl border border-border bg-surface/50 p-6 text-center"
                 >
-                  <div
-                    aria-hidden
-                    className="mx-auto grid h-24 w-24 place-items-center rounded-full bg-[var(--gradient-ember)] font-display text-3xl text-primary-foreground shadow-[var(--shadow-glow)]"
-                  >
-                    {m.initial}
-                  </div>
+                  <img
+                    src={m.img}
+                    alt={m.name}
+                    loading="lazy"
+                    className="mx-auto aspect-[4/5] w-full max-w-xs rounded-2xl object-cover object-top"
+                  />
                   <h3 className="mt-5 text-xl">{m.name}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{m.role}</p>
                 </li>
